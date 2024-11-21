@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internet Safety Quiz</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .question {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .options button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        .options button:hover {
+            background: #0056b3;
+        }
+        #next-btn {
+            padding: 10px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: none;
+        }
+        #next-btn:hover {
+            background: #218838;
+        }
+        #result {
+            display: none;
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+        .restart-btn {
+            padding: 10px 20px;
+            background: #ffc107;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .restart-btn:hover {
+            background: #e0a800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Internet Safety Quiz</h1>
+        <div id="quiz">
+            <div class="question" id="question">Loading...</div>
+            <ul class="options" id="options"></ul>
+            <button id="next-btn" onclick="nextQuestion()">Next Question</button>
+        </div>
+        <div id="result">
+            <h2>Your Score: <span id="score"></span></h2>
+            <button class="restart-btn" onclick="restartQuiz()">Restart Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { question: "What is phishing?", options: ["Online fishing game", "A scam to steal information", "A new app", "A type of virus"], answer: 1 },
+            { question: "What does HTTPS stand for?", options: ["Hyper Text Transfer Protocol Secure", "High-Tech Personal Server", "Host Transfer Protocol Secure", "Hyper Transfer Text Protocol"], answer: 0 },
+            { question: "What should you do if you receive a suspicious email?", options: ["Report it", "Open it", "Forward to friends", "Delete it"], answer: 0 },
+            { question: "Which password is the most secure?", options: ["123456", "qwerty", "P@ssw0rd!", "password"], answer: 2 },
+            { question: "What is two-factor authentication?", options: ["A strong password", "An extra verification step", "A firewall type", "A type of virus protection"], answer: 1 }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questionElement = document.getElementById("question");
+        const optionsElement = document.getElementById("options");
+        const nextButton = document.getElementById("next-btn");
+        const resultElement = document.getElementById("result");
+        const scoreElement = document.getElementById("score");
+
+        function startQuiz() {
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            resetState();
+            const currentQuestion = questions[currentQuestionIndex];
+            questionElement.textContent = currentQuestion.question;
+            currentQuestion.options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.classList.add("option");
+                button.onclick = () => selectAnswer(index);
+                optionsElement.appendChild(button);
+            });
+        }
+
+        function resetState() {
+            nextButton.style.display = "none";
+            optionsElement.innerHTML = "";
+        }
+
+        function selectAnswer(index) {
+            const isCorrect = index === questions[currentQuestionIndex].answer;
+            if (isCorrect) {
+                score++;
+                alert("Correct!");
+            } else {
+                alert(`Wrong! The correct answer was: ${questions[currentQuestionIndex].options[questions[currentQuestionIndex].answer]}`);
+            }
+            nextButton.style.display = "block";
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function endQuiz() {
+            document.getElementById("quiz").style.display = "none";
+            resultElement.style.display = "block";
+            scoreElement.textContent = `${score} out of ${questions.length}`;
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById("quiz").style.display = "block";
+            resultElement.style.display = "none";
+            startQuiz();
+        }
+
+        startQuiz();
+    </script>
+</body>
+</html>
